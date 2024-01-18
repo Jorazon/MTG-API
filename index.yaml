@@ -1,0 +1,902 @@
+openapi: "3.0.0"
+info:
+    version: "1.0.0"
+    title: "Magic: The Gathering API"
+    description: "Get information on Magic: The Gathering cards and sets."
+servers:
+    - description: "Magic: The Gathering API"
+      url: "https://api.magicthegathering.io/{version}"
+      variables:
+          version:
+              default: v1
+paths:
+    /cards:
+        get:
+            summary: Get all cards
+            description: "This call will return a maximum of 100 cards\n\nPaginate the response using the page parameter.\n\nEach field below can be used as a query parameter. By default, fields that have a singular value such as rarity, set, and name will always use a logical “or” operator when querying with a list of values. Fields that can have multiple values such as colors, supertypes, and subtypes can use a logical “and” or a logical “or” operator.\n\nThe accepted delimiters when querying fields are the pipe character or a comma character. The pipe represents a logical “or”, and a comma represents a logical “and”. The comma can only be used with fields that accept multiple values (like colors).\n\nExample:name=nissa, worldwaker|jace|ajani, caller More examples: colors=red,white,blue versus colors=red|white|blue"
+            parameters:
+                - name: name
+                  in: query
+                  description: "The card name. For split, double-faced and flip cards, just the name of one side of the card. Basically each ‘sub-card’ has its own record."
+                  schema:
+                      type: string
+                - name: layout
+                  in: query
+                  description: "The card layout. Possible values: normal, split, flip, double-faced, token, plane, scheme, phenomenon, leveler, vanguard, aftermath"
+                  schema:
+                      type: string
+                - name: cmc
+                  in: query
+                  description: Converted mana cost. Always a number
+                  schema:
+                      type: number
+                - name: colors
+                  in: query
+                  description: The card colors. Usually this is derived from the casting cost, but some cards are special (like the back of dual sided cards and Ghostfire).
+                  schema:
+                      type: string
+                - name: colorIdentity
+                  in: query
+                  description: The card’s color identity, by color code. [“Red”, “Blue”] becomes [“R”, “U”]. A card’s color identity includes colors from the card’s rules text.
+                  schema:
+                      type: string
+                - name: type
+                  in: query
+                  description: "The card type. This is the type you would see on the card if printed today. Note: The dash is a UTF8 ‘long dash’ as per the MTG rules"
+                  schema:
+                      type: string
+                - name: supertypes
+                  in: query
+                  description: "The supertypes of the card. These appear to the far left of the card type. Example values: Basic, Legendary, Snow, World, Ongoing"
+                  schema:
+                      type: string
+                - name: types
+                  in: query
+                  description: "The types of the card. These appear to the left of the dash in a card type. Example values: Instant, Sorcery, Artifact, Creature, Enchantment, Land, Planeswalker"
+                  schema:
+                      type: string
+                - name: subtypes
+                  in: query
+                  description: "The subtypes of the card. These appear to the right of the dash in a card type. Usually each word is its own subtype. Example values: Trap, Arcane, Equipment, Aura, Human, Rat, Squirrel, etc."
+                  schema:
+                      type: string
+                - name: rarity
+                  in: query
+                  description: "The rarity of the card. Examples: Common, Uncommon, Rare, Mythic Rare, Special, Basic Land"
+                  schema:
+                      type: string
+                - name: set
+                  in: query
+                  description: The set the card belongs to (set code).
+                  schema:
+                      type: string
+                - name: setName
+                  in: query
+                  description: The set the card belongs to.
+                  schema:
+                      type: string
+                - name: text
+                  in: query
+                  description: The oracle text of the card. May contain mana symbols and other symbols.
+                  schema:
+                      type: string
+                - name: flavor
+                  in: query
+                  description: The flavor text of the card.
+                  schema:
+                      type: string
+                - name: artist
+                  in: query
+                  description: The artist of the card. This may not match what is on the card as MTGJSON corrects many card misprints.
+                  schema:
+                      type: string
+                - name: number
+                  in: query
+                  description: The card number. This is printed at the bottom-center of the card in small text. This is a string, not an integer, because some cards have letters in their numbers.
+                  schema:
+                      type: string
+                - name: power
+                  in: query
+                  description: "The power of the card. This is only present for creatures. This is a string, not an integer, because some cards have powers like: “1+*”"
+                  schema:
+                      type: string
+                - name: toughness
+                  in: query
+                  description: "The toughness of the card. This is only present for creatures. This is a string, not an integer, because some cards have toughness like: “1+*”"
+                  schema:
+                      type: string
+                - name: loyalty
+                  in: query
+                  description: The loyalty of the card. This is only present for planeswalkers.
+                  schema:
+                      type: string
+                - name: language
+                  in: query
+                  description: The language the card is printed in. Use this parameter along with thename parameter when searching by foreignName
+                  schema:
+                      type: string
+                - name: gameFormat
+                  in: query
+                  description: The game format, such as Commander, Standard, Legacy, etc. (when used, legality defaults to Legal unless supplied)
+                  schema:
+                      type: string
+                - name: legality
+                  in: query
+                  description: The legality of the card for a given format, such as Legal, Banned or Restricted.
+                  schema:
+                      type: string
+                - name: page
+                  in: query
+                  description: The page of data to request
+                  schema:
+                      type: string
+                - name: pageSize
+                  in: query
+                  description: The amount of data to return in a single request. The default (and max) is 100.
+                  schema:
+                      type: string
+                - name: orderBy
+                  in: query
+                  description: The field to order by in the response results
+                  schema:
+                      type: string
+                - name: random
+                  in: query
+                  description: Fetch any number of cards (controlled by pageSize) randomly
+                  schema:
+                      type: string
+                - name: contains
+                  in: query
+                  description: Filter cards based on whether or not they have a specific field available (like imageUrl)
+                  schema:
+                      type: string
+                - name: id
+                  in: query
+                  description: A unique id for this card. It is made up by doing an SHA1 hash of setCode + cardName + cardImageName
+                  schema:
+                      type: string
+                - name: multiverseid
+                  in: query
+                  description: "The multiverseid of the card on Wizard’s Gatherer web page. Cards from sets that do not exist on Gatherer will NOT have a multiverseid. Sets not on Gatherer are: ATH, ITP, DKM, RQS, DPA and all sets with a 4 letter code that starts with a lowercase ‘p’."
+                  schema:
+                      type: string
+            responses:
+                200:
+                    description: All cards matching query parameters
+                    headers:
+                        Link:
+                            $ref: "#/components/headers/Link"
+                        Page-Size:
+                            $ref: "#/components/headers/Page-Size"
+                        Count:
+                            $ref: "#/components/headers/Count"
+                        Total-Count:
+                            $ref: "#/components/headers/Total-Count"
+                        Ratelimit-Limit:
+                            $ref: "#/components/headers/Ratelimit-Limit"
+                        Ratelimit-Remaining:
+                            $ref: "#/components/headers/Ratelimit-Remaining"
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    cards:
+                                        type: array
+                                        items:
+                                            $ref: "#/components/schemas/Card"
+                400:
+                    $ref: "#/components/responses/400"
+                403:
+                    $ref: "#/components/responses/403"
+                404:
+                    $ref: "#/components/responses/404"
+                500:
+                    $ref: "#/components/responses/500"
+                503:
+                    $ref: "#/components/responses/503"
+    /cards/{id}:
+        parameters:
+            - name: id
+              in: path
+              required: true
+              schema:
+                  oneOf:
+                      - type: integer
+                      - $ref: "#/components/schemas/ID"
+        get:
+            summary: ""
+            description: ""
+            responses:
+                200:
+                    description: ""
+                    headers:
+                        Ratelimit-Limit:
+                            $ref: "#/components/headers/Ratelimit-Limit"
+                        Ratelimit-Remaining:
+                            $ref: "#/components/headers/Ratelimit-Remaining"
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    card:
+                                        $ref: "#/components/schemas/Card"
+                400:
+                    $ref: "#/components/responses/400"
+                403:
+                    $ref: "#/components/responses/403"
+                404:
+                    $ref: "#/components/responses/404"
+                500:
+                    $ref: "#/components/responses/500"
+                503:
+                    $ref: "#/components/responses/503"
+    /sets:
+        get:
+            summary: "Get All Sets"
+            description: "Currently, only the name and block fields can be used as query parameters. To query on multiple names or blocks at a time, use a pipe separated list (ex. sets?name=khans|origins)."
+            parameters:
+                - name: name
+                  in: query
+                  description: "The name of the set"
+                  schema:
+                      type: string
+                - name: block
+                  in: query
+                  description: "The block the set is in"
+                  schema:
+                      type: string
+            responses:
+                200:
+                    description: ""
+                    headers:
+                        Link:
+                            $ref: "#/components/headers/Link"
+                        Page-Size:
+                            $ref: "#/components/headers/Page-Size"
+                        Count:
+                            $ref: "#/components/headers/Count"
+                        Total-Count:
+                            $ref: "#/components/headers/Total-Count"
+                        Ratelimit-Limit:
+                            $ref: "#/components/headers/Ratelimit-Limit"
+                        Ratelimit-Remaining:
+                            $ref: "#/components/headers/Ratelimit-Remaining"
+                    content:
+                        application/json:
+                            schema:
+                                type: array
+                                items:
+                                    type: string
+                400:
+                    $ref: "#/components/responses/400"
+                403:
+                    $ref: "#/components/responses/403"
+                404:
+                    $ref: "#/components/responses/404"
+                500:
+                    $ref: "#/components/responses/500"
+                503:
+                    $ref: "#/components/responses/503"
+    /sets/{id}:
+        parameters:
+            - name: id
+              in: path
+              required: true
+              schema:
+                  type: string
+              example: KTK
+        get:
+            responses:
+                200:
+                    description: ""
+                    headers:
+                        Ratelimit-Limit:
+                            $ref: "#/components/headers/Ratelimit-Limit"
+                        Ratelimit-Remaining:
+                            $ref: "#/components/headers/Ratelimit-Remaining"
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    set:
+                                        $ref: "#/components/schemas/Set"
+                400:
+                    $ref: "#/components/responses/400"
+                403:
+                    $ref: "#/components/responses/403"
+                404:
+                    $ref: "#/components/responses/404"
+                500:
+                    $ref: "#/components/responses/500"
+                503:
+                    $ref: "#/components/responses/503"
+    /sets/{id}/booster:
+        parameters:
+            - name: id
+              in: path
+              required: true
+              schema:
+                  type: string
+        get:
+            summary: Generate Booster Pack
+            description: Returns a list of cards for a specific set representing a booster pack for the set. The number of commons, uncommons, rares, etc. are determined by the booster field in a set response.
+            responses:
+                200:
+                    description: ""
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    cards:
+                                        type: array
+                                        items:
+                                            $ref: "#/components/schemas/Card"
+                400:
+                    $ref: "#/components/responses/400"
+                403:
+                    $ref: "#/components/responses/403"
+                404:
+                    $ref: "#/components/responses/404"
+                500:
+                    $ref: "#/components/responses/500"
+                503:
+                    $ref: "#/components/responses/503"
+    /types:
+        get:
+            summary: "Get All Types"
+            responses:
+                200:
+                    description: "Get All Types"
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    types:
+                                        type: array
+                                        items:
+                                            type: string
+                                        example:
+                                            - Artifact
+                                            - Battle
+                                            - Conspiracy
+                                            - Planeswalker
+                                            - Vanguard
+                400:
+                    $ref: "#/components/responses/400"
+                403:
+                    $ref: "#/components/responses/403"
+                404:
+                    $ref: "#/components/responses/404"
+                500:
+                    $ref: "#/components/responses/500"
+                503:
+                    $ref: "#/components/responses/503"
+    /subtypes:
+        get:
+            summary: "Get All Sub Types"
+            responses:
+                200:
+                    description: "Get All Sub Types"
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    formats:
+                                        type: array
+                                        items:
+                                            type: string
+                                        example:
+                                            - Abian
+                                            - Background
+                                            - Calix
+                400:
+                    $ref: "#/components/responses/400"
+                403:
+                    $ref: "#/components/responses/403"
+                404:
+                    $ref: "#/components/responses/404"
+                500:
+                    $ref: "#/components/responses/500"
+                503:
+                    $ref: "#/components/responses/503"
+    /supertypes:
+        get:
+            summary: "Get All Super Types"
+            responses:
+                200:
+                    description: "Get All Super Types"
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    supertypes:
+                                        type: array
+                                        items:
+                                            type: string
+                                        example:
+                                            - Basic
+                                            - Host
+                                            - Legendary
+                                            - Ongoing
+                                            - Snow
+                                            - World
+                400:
+                    $ref: "#/components/responses/400"
+                403:
+                    $ref: "#/components/responses/403"
+                404:
+                    $ref: "#/components/responses/404"
+                500:
+                    $ref: "#/components/responses/500"
+                503:
+                    $ref: "#/components/responses/503"
+    /formats:
+        get:
+            summary: "Get All Game Formats"
+            responses:
+                200:
+                    description: "Get All Game Formats"
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    formats:
+                                        type: array
+                                        items:
+                                            type: string
+                                        example:
+                                            - Alchemy
+                                            - Brawl
+                                            - Commander
+                                            - Duel
+                                            - Explorer
+                                            - Future
+                                            - Gladiator
+                                            - Historic
+                                            - Historicbrawl
+                                            - Legacy
+                                            - Modern
+                                            - Oathbreaker
+                                            - Oldschool
+                                            - Pauper
+                                            - Paupercommander
+                                            - Penny
+                                            - Pioneer
+                                            - Predh
+                                            - Premodern
+                                            - Standard
+                                            - Vintage
+                400:
+                    $ref: "#/components/responses/400"
+                403:
+                    $ref: "#/components/responses/403"
+                404:
+                    $ref: "#/components/responses/404"
+                500:
+                    $ref: "#/components/responses/500"
+                503:
+                    $ref: "#/components/responses/503"
+
+components:
+    schemas:
+        Card:
+            type: object
+            properties:
+                name:
+                    description: "The card name. For split, double-faced and flip cards, just the name of one side of the card. Basically each ‘sub-card’ has its own record."
+                    type: string
+                    example: "Narset, Enlightened Master"
+                names:
+                    description: Only used for split, flip and dual cards. Will contain all the names on this card, front or back
+                    type: array
+                    items:
+                        type: string
+                    example:
+                        - "Archangel Avacyn"
+                        - "Avacyn, the Purifier"
+                manaCost:
+                    description: The mana cost of this card. Consists of one or more mana symbols. (use cmc and colors to query)
+                    type: string
+                    pattern: "^((\\{([0-9]|10)\\})?((\\{(([0-9]|10)\\/W|W|W\\/[UBRGP])\\})*(\\{(([0-9]|10)\\/U|U|U\\/[BRGP])\\})*(\\{(([0-9]|10)\\/B|B|B\\/[RGP])\\})*(\\{(([0-9]|10)\\/R|R|R\\/[GP])\\})*(\\{(([0-9]|10)\\/G|G|G\\/P)\\})*))$"
+                    example: "{3}{U}{R}{W}"
+                cmc:
+                    description: "Converted mana cost. Always a number"
+                    oneOf:
+                        - type: integer
+                        - type: number
+                    example: 6
+                colors:
+                    description: "The card colors. Usually this is derived from the casting cost, but some cards are special (like the back of dual sided cards and Ghostfire)."
+                    type: array
+                    items:
+                        $ref: "#/components/schemas/Color"
+                colorIdentity:
+                    description: "The card’s color identity, by color code. A card’s color identity includes colors from the card’s rules text."
+                    type: array
+                    items:
+                        $ref: "#/components/schemas/Color"
+                type:
+                    description: "The card type. This is the type you would see on the card if printed today. Note: The dash is a UTF8 ‘long dash’ as per the MTG rules"
+                    type: string
+                    example: Legendary Creature — Human Monk
+                supertypes:
+                    description: "The supertypes of the card. These appear to the far left of the card type."
+                    type: array
+                    items:
+                        type: string
+                    example:
+                        - Legendary
+                types:
+                    description: "The types of the card. These appear to the left of the dash in a card type."
+                    type: array
+                    items:
+                        type: string
+                    example:
+                        - Creature
+                subtypes:
+                    description: "The subtypes of the card. These appear to the right of the dash in a card type. Usually each word is its own subtype."
+                    type: array
+                    items:
+                        type: string
+                    example:
+                        - Human
+                        - Monk
+                rarity:
+                    description: "The rarity of the card."
+                    type: string
+                    example: Mythic
+                set:
+                    description: "The set the card belongs to (set code)."
+                    type: string
+                    example: KTK
+                setName:
+                    description: "The set the card belongs to."
+                    type: string
+                    example: Khans of Tarkir
+                text:
+                    description: "The oracle text of the card. May contain mana symbols and other symbols."
+                    type: string
+                    example: First strike, hexproof\nWhenever Narset, Enlightened Master attacks, exile the top four cards of your library. Until end of turn, you may cast noncreature spells from among those cards without paying their mana costs.
+                flavor:
+                    description: The flavor text of the card.
+                    type: string
+                    example: '"Krosa the great. Krosa the enduring. Look to the forest, and it will share its bounty."\n—Zyd, Kamahlite druid'
+                artist:
+                    description: "The artist of the card. This may not match what is on the card as MTGJSON corrects many card misprints."
+                    type: string
+                    example: Magali Villeneuve
+                number:
+                    description: "The card number. This is printed at the bottom-center of the card in small text. This is a string, not an integer, because some cards have letters in their numbers."
+                    type: string
+                    example: 190
+                power:
+                    description: "The power of the card. This is only present for creatures. This is a string, not an integer, because some cards have powers like: “1+*”"
+                    type: string
+                    example: 3
+                toughness:
+                    description: "The toughness of the card. This is only present for creatures. This is a string, not an integer, because some cards have toughness like: “1+*”"
+                    type: string
+                    example: 2
+                layout:
+                    description: ""
+                    type: string
+                    enum:
+                        - normal
+                        - split
+                        - flip
+                        - double-faced
+                        - token
+                        - plane
+                        - scheme
+                        - phenomenon
+                        - leveler
+                        - vanguard
+                        - aftermath
+                multiverseid:
+                    $ref: "#/components/schemas/multiverseid"
+                imageUrl:
+                    description: The image url for a card. Only exists if the card has a multiverse id.
+                    type: string
+                    example: http://gatherer.wizards.com/Handlers/Image.ashx?multiverseid=386616&type=card
+                loyalty:
+                    description: The loyalty of the card. This is only present for planeswalkers.
+                    type: string
+                    example: 3
+                variations:
+                    description: If a card has alternate art (for example, 4 different Forests, or the 2 Brothers Yamazaki) then each other variation’s multiverseid will be listed here, NOT including the current card’s multiverseid.
+                    type: array
+                    items:
+                        $ref: "#/components/schemas/Card/properties/id"
+                watermark:
+                    description: "The watermark on the card. Note: Split cards don’t currently have this field set, despite having a watermark on each side of the split card."
+                    type: string
+                    example: jeskai
+                border:
+                    description: "If the border for this specific card is DIFFERENT than the border specified in the top level set JSON, then it will be specified here. (Example: Unglued has silver borders, except for the lands which are black bordered)"
+                    $ref: "#/components/schemas/Border"
+                rulings:
+                    description: The rulings for the card. An array of objects, each object having ‘date’ and ‘text’ keys.
+                    type: array
+                    items:
+                        type: object
+                        properties:
+                            date:
+                                $ref: "#/components/schemas/Date"
+                            text:
+                                type: string
+                                example: You can’t play any land cards exiled with Narset.
+                foreignNames:
+                    type: array
+                    items:
+                        type: object
+                        properties:
+                            name:
+                                description: "The card name. For split, double-faced and flip cards, just the name of one side of the card. Basically each ‘sub-card’ has its own record."
+                                type: string
+                                example: "Narset, Erleuchtete Meisterin"
+                            text:
+                                description: "The oracle text of the card. May contain mana symbols and other symbols."
+                                type: string
+                                example: "Erstschlag, Fluchsicher\nImmer wenn Narset, Erleuchtete Meisterin, angreift, schicke die obersten vier Karten deiner Bibliothek ins Exil. Bis zum Ende des Zuges kannst du Nichtkreatur-Karten wirken, die mit Narset in diesem Zug ins Exil geschickt wurden, ohne ihre Manakosten zu bezahlen."
+                            type:
+                                description: "The card type. This is the type you would see on the card if printed today. Note: The dash is a UTF8 ‘long dash’ as per the MTG rules"
+                                type: string
+                                example: "Legendäre Kreatur — Mensch, Mönch"
+                            flavor:
+                                description: "The flavor text of the card."
+                                type: string
+                                example: Wo Yanggu ist, ist Mowu nicht weit — manchmal ist er an Yanggus Seite, und manchmal sieht man vor lauter Mowu Yanggu nicht mehr.
+                            imageUrl:
+                                description: "The image url for a card. Only exists if the card has a multiverse id."
+                                type: string
+                                example: http://gatherer.wizards.com/Handlers/Image.ashx?multiverseid=387423&type=card
+                            language:
+                                description: The language the card is printed in. Use this parameter along with the name parameter when searching by foreignName
+                                type: string
+                                example: German
+                            multiverseid:
+                                $ref: "#/components/schemas/multiverseid"
+                printings:
+                    description: ""
+                    type: array
+                    items:
+                        type: string
+                    example:
+                        - KTK
+                        - PKTK
+                        - SLD
+                legalities:
+                    type: array
+                    items:
+                        type: object
+                        properties:
+                            format:
+                                type: string
+                                example: Commander
+                            legality:
+                                type: string
+                                enum:
+                                    - Legal
+                                    - Restricted
+                                    - Banned
+                id:
+                    $ref: "#/components/schemas/ID"
+                timeshifted:
+                    description: If this card was a timeshifted card in the set.
+                    type: boolean
+                hand:
+                    description: Maximum hand size modifier. Only exists for Vanguard cards.
+                    type: string
+                    example: "+1"
+                life:
+                    description: Starting life total modifier. Only exists for Vanguard cards.
+                    type: string
+                    example: "-5"
+                reserved:
+                    description: Set to true if this card is reserved by Wizards Official Reprint Policy
+                    type: boolean
+                releaseDate:
+                    $ref: "#/components/schemas/Date"
+                starter:
+                    description: Set to true if this card was only released as part of a core box set. These are technically part of the core sets and are tournament legal despite not being available in boosters
+                    type: boolean
+                originalText:
+                    description: The original text on the card at the time it was printed. This field is not available for promo cards.
+                    type: string
+                    example: "Flying, first strike, vigilance, trample, haste, protection from black, protection from red"
+                originalType:
+                    description: The original type on the card at the time it was printed. This field is not available for promo cards.
+                    type: string
+                    example: "Legendary Creature - Angel"
+                source:
+                    description: For promo cards, this is where this card was originally obtained. For box sets that are theme decks, this is which theme deck the card is from.
+                    type: string
+        Set:
+            type: object
+            properties:
+                name:
+                    description: The name of the set
+                    type: string
+                    example: Khans of Tarkir
+                code:
+                    description: The code name of the set
+                    type: string
+                    example: KTK
+                gathererCode:
+                    description: The code that Gatherer uses for the set. Only present if different than ‘code’
+                    type: string
+                    example: KTK
+                oldCode:
+                    description: An old style code used by some Magic software. Only present if different than ‘gathererCode’ and ‘code’
+                    type: string
+                    example: KTK
+                magicCardsInfoCode:
+                    description: The code that magiccards.info uses for the set. Only present if magiccards.info has this set
+                    type: string
+                    example: KTK
+                booster:
+                    description: Booster contents for this set
+                    type: array
+                    items:
+                        anyOf:
+                            - type: string
+                            - type: array
+                              items:
+                                  type: string
+                    example:
+                        - - rare
+                          - mythic rare
+                        - uncommon
+                        - uncommon
+                        - uncommon
+                        - common
+                        - common
+                        - common
+                        - common
+                        - common
+                        - common
+                        - common
+                        - common
+                        - common
+                        - common
+                releaseDate:
+                    $ref: "#/components/schemas/Date"
+                border:
+                    description: "The type of border on the cards"
+                    $ref: "#/components/schemas/Border"
+                expansion:
+                    description: Type of set.
+                    type: string
+                    enum:
+                        - core
+                        - expansion
+                        - reprint
+                        - box
+                        - un
+                        - from the vault
+                        - premium deck
+                        - duel deck
+                        - starter
+                        - commander
+                        - planechase
+                        - archenemy
+                        - promo
+                        - vanguard
+                        - masters
+                block:
+                    description: The block the set is in
+                    type: string
+                    example: Khans of Tarkir
+                onlineOnly:
+                    description: Set to true if the set was only released online
+                    type: boolean
+        multiverseid:
+            description: "The multiverseid of the card on Wizard’s Gatherer web page. Cards from sets that do not exist on Gatherer will NOT have a multiverseid. Sets not on Gatherer are: ATH, ITP, DKM, RQS, DPA and all sets with a 4 letter code that starts with a lowercase ‘p’."
+            type: string
+            pattern: "^\\d+$"
+            example: 386616
+        Date:
+            description: "The date a set or promo card was released. For promo sets, the date the first card was released. The date may not be accurate to an exact day and month, thus only a partial date may be set. Some promo cards do not have a known release date. Date is in the format YYYY-MM-DD, YYYY-MM, or YYYY"
+            type: string
+            pattern: "^\\d{4}(-\\d{2}){0,2}$"
+            example: 2014-09-20
+        Color:
+            type: string
+            enum:
+                - W
+                - U
+                - B
+                - R
+                - G
+        Border:
+            type: string
+            enum:
+                - white
+                - black
+                - silver
+        ID:
+            description: "A unique id for this card. It is made up by doing an SHA1 hash of setCode + cardName + cardImageName"
+            type: string
+            pattern: "^([a-z0-9]{8}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{12})$"
+            example: "15e45fe0-92ea-52dc-8665-7105ac30db70"
+        Error:
+            type: object
+            properties:
+                status:
+                    description: HTTP response status code
+                    type: integer
+                    example: 404
+                error:
+                    description: A human readable error message
+                    type: string
+                    example: "error message here"
+    responses:
+        400:
+            description: We could not process that action
+            content:
+                application/json:
+                    schema:
+                        $ref: "#/components/schemas/Error"
+        403:
+            description: You exceeded the rate limit
+            content:
+                application/json:
+                    schema:
+                        $ref: "#/components/schemas/Error"
+        404:
+            description: The requested resource could not be found
+            content:
+                application/json:
+                    schema:
+                        $ref: "#/components/schemas/Error"
+        500:
+            description: We had a problem with our server. Please try again later
+            content:
+                application/json:
+                    schema:
+                        $ref: "#/components/schemas/Error"
+        503:
+            description: We are temporarily offline for maintenance. Please try again later
+            content:
+                application/json:
+                    schema:
+                        $ref: "#/components/schemas/Error"
+    headers:
+        Link:
+            description: Link headers with prev, last, next, first links (when appropriate)
+            schema:
+                type: string
+            example: <http://api.magicthegathering.io/v1/cards?page=311>; rel="last", <http://api.magicthegathering.io/v1/cards?page=2>; rel="next"
+        Page-Size:
+            description: "The page size for the request"
+            schema:
+                type: integer
+            example: 100
+        Count:
+            description: "The number of elements returned"
+            schema:
+                type: integer
+            example: 100
+        Total-Count:
+            description: "The total number of elements (across all pages)"
+            schema:
+                type: integer
+            example: 7007
+        Ratelimit-Limit:
+            description: "The ratelimit for a given user"
+            schema:
+                type: integer
+            example: 1000
+        Ratelimit-Remaining:
+            description: "The number of requests left before the ratelimit is exceeded."
+            schema:
+                type: integer
+            example: 999
