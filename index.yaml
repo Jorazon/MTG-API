@@ -17,146 +17,175 @@ paths:
             parameters:
                 - name: name
                   in: query
+                  required: false
                   description: "The card name. For split, double-faced and flip cards, just the name of one side of the card. Basically each ‘sub-card’ has its own record."
                   schema:
                       type: string
                 - name: layout
                   in: query
+                  required: false
                   description: "The card layout. Possible values: normal, split, flip, double-faced, token, plane, scheme, phenomenon, leveler, vanguard, aftermath"
                   schema:
                       type: string
                 - name: cmc
                   in: query
+                  required: false
                   description: Converted mana cost. Always a number
                   schema:
                       type: number
                 - name: colors
                   in: query
+                  required: false
                   description: The card colors. Usually this is derived from the casting cost, but some cards are special (like the back of dual sided cards and Ghostfire).
                   schema:
                       type: string
                 - name: colorIdentity
                   in: query
+                  required: false
                   description: The card’s color identity, by color code. [“Red”, “Blue”] becomes [“R”, “U”]. A card’s color identity includes colors from the card’s rules text.
                   schema:
                       type: string
                 - name: type
                   in: query
+                  required: false
                   description: "The card type. This is the type you would see on the card if printed today. Note: The dash is a UTF8 ‘long dash’ as per the MTG rules"
                   schema:
                       type: string
                 - name: supertypes
                   in: query
+                  required: false
                   description: "The supertypes of the card. These appear to the far left of the card type. Example values: Basic, Legendary, Snow, World, Ongoing"
                   schema:
                       type: string
                 - name: types
                   in: query
+                  required: false
                   description: "The types of the card. These appear to the left of the dash in a card type. Example values: Instant, Sorcery, Artifact, Creature, Enchantment, Land, Planeswalker"
                   schema:
                       type: string
                 - name: subtypes
                   in: query
+                  required: false
                   description: "The subtypes of the card. These appear to the right of the dash in a card type. Usually each word is its own subtype. Example values: Trap, Arcane, Equipment, Aura, Human, Rat, Squirrel, etc."
                   schema:
                       type: string
                 - name: rarity
                   in: query
+                  required: false
                   description: "The rarity of the card. Examples: Common, Uncommon, Rare, Mythic Rare, Special, Basic Land"
                   schema:
                       type: string
                 - name: set
                   in: query
+                  required: false
                   description: The set the card belongs to (set code).
                   schema:
                       type: string
                 - name: setName
                   in: query
+                  required: false
                   description: The set the card belongs to.
                   schema:
                       type: string
                 - name: text
                   in: query
+                  required: false
                   description: The oracle text of the card. May contain mana symbols and other symbols.
                   schema:
                       type: string
                 - name: flavor
                   in: query
+                  required: false
                   description: The flavor text of the card.
                   schema:
                       type: string
                 - name: artist
                   in: query
+                  required: false
                   description: The artist of the card. This may not match what is on the card as MTGJSON corrects many card misprints.
                   schema:
                       type: string
                 - name: number
                   in: query
+                  required: false
                   description: The card number. This is printed at the bottom-center of the card in small text. This is a string, not an integer, because some cards have letters in their numbers.
                   schema:
                       type: string
                 - name: power
                   in: query
+                  required: false
                   description: "The power of the card. This is only present for creatures. This is a string, not an integer, because some cards have powers like: “1+*”"
                   schema:
                       type: string
                 - name: toughness
                   in: query
+                  required: false
                   description: "The toughness of the card. This is only present for creatures. This is a string, not an integer, because some cards have toughness like: “1+*”"
                   schema:
                       type: string
                 - name: loyalty
                   in: query
+                  required: false
                   description: The loyalty of the card. This is only present for planeswalkers.
                   schema:
                       type: string
                 - name: language
                   in: query
+                  required: false
                   description: The language the card is printed in. Use this parameter along with thename parameter when searching by foreignName
                   schema:
                       type: string
                 - name: gameFormat
                   in: query
+                  required: false
                   description: The game format, such as Commander, Standard, Legacy, etc. (when used, legality defaults to Legal unless supplied)
                   schema:
                       type: string
                 - name: legality
                   in: query
+                  required: false
                   description: The legality of the card for a given format, such as Legal, Banned or Restricted.
                   schema:
                       type: string
                 - name: page
                   in: query
+                  required: false
                   description: The page of data to request
                   schema:
                       type: string
                 - name: pageSize
                   in: query
+                  required: false
                   description: The amount of data to return in a single request. The default (and max) is 100.
                   schema:
                       type: string
                 - name: orderBy
                   in: query
+                  required: false
                   description: The field to order by in the response results
                   schema:
                       type: string
                 - name: random
                   in: query
+                  required: false
                   description: Fetch any number of cards (controlled by pageSize) randomly
                   schema:
                       type: string
                 - name: contains
                   in: query
+                  required: false
                   description: Filter cards based on whether or not they have a specific field available (like imageUrl)
                   schema:
                       type: string
                 - name: id
                   in: query
+                  required: false
                   description: A unique id for this card. It is made up by doing an SHA1 hash of setCode + cardName + cardImageName
                   schema:
                       type: string
                 - name: multiverseid
                   in: query
+                  required: false
                   description: "The multiverseid of the card on Wizard’s Gatherer web page. Cards from sets that do not exist on Gatherer will NOT have a multiverseid. Sets not on Gatherer are: ATH, ITP, DKM, RQS, DPA and all sets with a 4 letter code that starts with a lowercase ‘p’."
                   schema:
                       type: string
@@ -238,11 +267,13 @@ paths:
             parameters:
                 - name: name
                   in: query
+                  required: false
                   description: "The name of the set"
                   schema:
                       type: string
                 - name: block
                   in: query
+                  required: false
                   description: "The block the set is in"
                   schema:
                       type: string
@@ -265,9 +296,12 @@ paths:
                     content:
                         application/json:
                             schema:
-                                type: array
-                                items:
-                                    type: string
+                                type: object
+                                properties:
+                                    sets:
+                                        type: array
+                                        items:
+                                            $ref: "#/components/schemas/Set"
                 400:
                     $ref: "#/components/responses/400"
                 403:
@@ -576,6 +610,13 @@ components:
                 rarity:
                     description: "The rarity of the card."
                     type: string
+                    enum:
+                        - "Basic Land"
+                        - Common
+                        - Uncommon
+                        - "Mythic Rare"
+                        - Timeshifted
+                        - Masterpiece
                     example: Mythic
                 set:
                     description: "The set the card belongs to (set code)."
@@ -709,8 +750,8 @@ components:
                                 type: string
                                 enum:
                                     - Legal
-                                    - Restricted
                                     - Banned
+                                    - Restricted
                 id:
                     $ref: "#/components/schemas/ID"
                 timeshifted:
@@ -746,26 +787,33 @@ components:
         Set:
             type: object
             properties:
-                name:
-                    description: The name of the set
-                    type: string
-                    example: Khans of Tarkir
                 code:
                     description: The code name of the set
                     type: string
                     example: KTK
-                gathererCode:
-                    description: The code that Gatherer uses for the set. Only present if different than ‘code’
+                name:
+                    description: The name of the set
                     type: string
-                    example: KTK
-                oldCode:
-                    description: An old style code used by some Magic software. Only present if different than ‘gathererCode’ and ‘code’
+                    example: Khans of Tarkir
+                type:
+                    description: Type of set.
                     type: string
-                    example: KTK
-                magicCardsInfoCode:
-                    description: The code that magiccards.info uses for the set. Only present if magiccards.info has this set
-                    type: string
-                    example: KTK
+                    enum:
+                        - core
+                        - expansion
+                        - reprint
+                        - box
+                        - un
+                        - from the vault
+                        - premium deck
+                        - duel deck
+                        - starter
+                        - commander
+                        - planechase
+                        - archenemy
+                        - promo
+                        - vanguard
+                        - masters
                 booster:
                     description: Booster contents for this set
                     type: array
@@ -793,28 +841,6 @@ components:
                         - common
                 releaseDate:
                     $ref: "#/components/schemas/Date"
-                border:
-                    description: "The type of border on the cards"
-                    $ref: "#/components/schemas/Border"
-                expansion:
-                    description: Type of set.
-                    type: string
-                    enum:
-                        - core
-                        - expansion
-                        - reprint
-                        - box
-                        - un
-                        - from the vault
-                        - premium deck
-                        - duel deck
-                        - starter
-                        - commander
-                        - planechase
-                        - archenemy
-                        - promo
-                        - vanguard
-                        - masters
                 block:
                     description: The block the set is in
                     type: string
@@ -822,6 +848,21 @@ components:
                 onlineOnly:
                     description: Set to true if the set was only released online
                     type: boolean
+                border:
+                    description: "The type of border on the cards"
+                    $ref: "#/components/schemas/Border"
+                gathererCode:
+                    description: The code that Gatherer uses for the set. Only present if different than ‘code’
+                    type: string
+                    example: KTK
+                oldCode:
+                    description: An old style code used by some Magic software. Only present if different than ‘gathererCode’ and ‘code’
+                    type: string
+                    example: KTK
+                magicCardsInfoCode:
+                    description: The code that magiccards.info uses for the set. Only present if magiccards.info has this set
+                    type: string
+                    example: KTK
         multiverseid:
             description: "The multiverseid of the card on Wizard’s Gatherer web page. Cards from sets that do not exist on Gatherer will NOT have a multiverseid. Sets not on Gatherer are: ATH, ITP, DKM, RQS, DPA and all sets with a 4 letter code that starts with a lowercase ‘p’."
             type: string
