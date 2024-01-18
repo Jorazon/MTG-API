@@ -205,11 +205,10 @@ paths:
                       - type: integer
                       - $ref: "#/components/schemas/ID"
         get:
-            summary: ""
-            description: ""
+            summary: "Get Card"
             responses:
                 200:
-                    description: ""
+                    description: "Returns a specific card by id or multiverseid"
                     headers:
                         Ratelimit-Limit:
                             $ref: "#/components/headers/Ratelimit-Limit"
@@ -288,9 +287,10 @@ paths:
                   type: string
               example: KTK
         get:
+            summary: Get Set
             responses:
                 200:
-                    description: ""
+                    description: "Returns a specific set by the set code"
                     headers:
                         Ratelimit-Limit:
                             $ref: "#/components/headers/Ratelimit-Limit"
@@ -322,10 +322,14 @@ paths:
                   type: string
         get:
             summary: Generate Booster Pack
-            description: Returns a list of cards for a specific set representing a booster pack for the set. The number of commons, uncommons, rares, etc. are determined by the booster field in a set response.
             responses:
                 200:
-                    description: ""
+                    description: "Returns a list of cards for a specific set representing a booster pack for the set. The number of commons, uncommons, rares, etc. are determined by the booster field in a set response."
+                    headers:
+                        Ratelimit-Limit:
+                            $ref: "#/components/headers/Ratelimit-Limit"
+                        Ratelimit-Remaining:
+                            $ref: "#/components/headers/Ratelimit-Remaining"
                     content:
                         application/json:
                             schema:
@@ -351,6 +355,11 @@ paths:
             responses:
                 200:
                     description: "Get All Types"
+                    headers:
+                        Ratelimit-Limit:
+                            $ref: "#/components/headers/Ratelimit-Limit"
+                        Ratelimit-Remaining:
+                            $ref: "#/components/headers/Ratelimit-Remaining"
                     content:
                         application/json:
                             schema:
@@ -382,6 +391,11 @@ paths:
             responses:
                 200:
                     description: "Get All Sub Types"
+                    headers:
+                        Ratelimit-Limit:
+                            $ref: "#/components/headers/Ratelimit-Limit"
+                        Ratelimit-Remaining:
+                            $ref: "#/components/headers/Ratelimit-Remaining"
                     content:
                         application/json:
                             schema:
@@ -411,6 +425,11 @@ paths:
             responses:
                 200:
                     description: "Get All Super Types"
+                    headers:
+                        Ratelimit-Limit:
+                            $ref: "#/components/headers/Ratelimit-Limit"
+                        Ratelimit-Remaining:
+                            $ref: "#/components/headers/Ratelimit-Remaining"
                     content:
                         application/json:
                             schema:
@@ -443,6 +462,11 @@ paths:
             responses:
                 200:
                     description: "Get All Game Formats"
+                    headers:
+                        Ratelimit-Limit:
+                            $ref: "#/components/headers/Ratelimit-Limit"
+                        Ratelimit-Remaining:
+                            $ref: "#/components/headers/Ratelimit-Remaining"
                     content:
                         application/json:
                             schema:
